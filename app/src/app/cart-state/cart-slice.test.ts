@@ -1,7 +1,7 @@
-import type { Product } from "../../core/product/domain/product";
-import { cartReducer } from "./cart-slice";
+import type {Product} from "../../core/product/domain/product";
+import {added, cartReducer} from "./cart-slice";
 
-const product1 : Product = {
+const product1: Product = {
     id: '1',
     name: 'Product 1',
     price: 100,
@@ -11,26 +11,74 @@ const product1 : Product = {
     quantityMax: 10,
 };
 
-describe('cartSlice', () => {
+describe('cartSlice emtpy', () => {
+
+    // Panier vide
     it('On créer un panier vide', () => {
-     const state = cartReducer(undefined, { type: 'unknown' });
-     expect(state.cart.items).toEqual([]);
+        const state = cartReducer(undefined, {type: 'unknown'});
+        expect(state.cart.items).toEqual([]);
     })
 });
 
 
+describe('CartSlice', () => {
 
-// Panier vide 
 
-// Ajoute un produit au panier
+    // Ajoute un produit au panier
+    it('Ajoute un item valide', () => {
+        let state = cartReducer(undefined, {type: 'unknown'});
+        state = cartReducer(state, added({product: product1, quantity: 1}));
 
-// Ajoute un produit au panier avec une quantité supérieure à 1
+        expect(state.cart.items).toEqual([{
+            name: product1.name, quantity: 1, productId: product1.id, priceCents: product1.price
+        }]);
+    });
 
-// Ajoute un produit au panier avec une quantité supérieure à la quantité maximale
+    // Ajoute un produit au panier avec une quantité supérieure à 1
 
-// Ajouter un produit au panier qui est déjà présent dans le panier
+    it('Ajoute un item valide avec une quantité supérieur a 1', () => {
+        let state = cartReducer(undefined, {type: 'unknown'});
+        state = cartReducer(state, added({product: product1, quantity: 3}));
 
-// Ajouter un produit au panier qui n'existe pas
+        expect(state.cart.items).toEqual([{
+            name: product1.name, quantity: 3, productId: product1.id, priceCents: product1.price
+        }]);
+
+    });
+
+    // Ajoute un produit au panier avec une quantité supérieure à la quantité maximale
+    it('Ajoute un item valide avec une quantité max', () => {
+        let state = cartReducer(undefined, {type: 'unknown'});
+        state = cartReducer(state, added({product: product1, quantity: 11}));
+        expect(state.cart.items).toEqual([]);
+
+    });
+
+    // Ajouter un produit au panier qui est déjà présent dans le panier
+    it('Ajoute plusieurs fois le meme item avec des qty différentes', () => {
+        let state = cartReducer(undefined, {type: 'unknown'});
+        state = cartReducer(state, added({product: product1, quantity: 1}));
+        expect(state.cart.items).toEqual([{
+            name: product1.name, quantity: 1, productId: product1.id, priceCents: product1.price
+        }]);
+
+        state = cartReducer(state, added({product: product1, quantity: 3}));
+        expect(state.cart.items).toEqual([{
+            name: product1.name, quantity: 4, productId: product1.id, priceCents: product1.price
+        }]);
+
+    });
+
+    // Ajouter un produit au panier qui n'existe pas
+    it('Ajoute un item qui existe pas', () => {
+        let state = cartReducer(undefined, {type: 'unknown'});
+        state = cartReducer(state, added({product: {...product1, id: ''}, quantity: 1}));
+        expect(state.cart.items).toEqual([]);
+
+    });
+
+});
+
 
 // Supprime un produit du panier
 
