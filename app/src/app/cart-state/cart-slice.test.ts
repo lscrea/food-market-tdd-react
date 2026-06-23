@@ -11,6 +11,11 @@ const product1 : Product = {
     quantityMax: 10,
 };
 
+
+
+
+// Panier vide 
+
 describe('cartSlice', () => {
     it('On créer un panier vide', () => {
      const state = cartReducer(undefined, { type: 'unknown' });
@@ -19,18 +24,21 @@ describe('cartSlice', () => {
 });
 
 
-
-// Panier vide 
-
 // Ajoute un produit au panier
+
+
+
 
 // Ajoute un produit au panier avec une quantité supérieure à 1
 
-// Ajoute un produit au panier avec une quantité supérieure à la quantité maximale
-
 // Ajouter un produit au panier qui est déjà présent dans le panier
 
+// Ajoute un produit au panier avec une quantité supérieure à la quantité maximale
+
 // Ajouter un produit au panier qui n'existe pas
+
+
+
 
 // Supprime un produit du panier
 
