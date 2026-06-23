@@ -21,3 +21,5 @@ export function normalizeText(text: string): string {
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '');
 }
+
+
