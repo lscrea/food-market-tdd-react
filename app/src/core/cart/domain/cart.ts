@@ -22,6 +22,9 @@ export function addItem(cart: Cart, product: Product, quantity = 1): Cart {
     return cart;
   }
 
+  if(quantity >= product.quantityMax) return cart;
+  if(!product.id) return cart;
+
   // On cherche si une ligne existe déjà pour ce produit.
   // .find(...) retourne l'item OU undefined.
   const existing = cart.items.find((item) => item.productId === product.id);
