@@ -1,4 +1,5 @@
 import type { Product } from "../../core/product/domain/product";
+import { cartReducer } from "./cart-slice";
 
 const product1 : Product = {
     id: '1',
@@ -9,6 +10,14 @@ const product1 : Product = {
     inStock: true,
     quantityMax: 10,
 };
+
+describe('cartSlice', () => {
+    it('On créer un panier vide', () => {
+     const state = cartReducer(undefined, { type: 'unknown' });
+     expect(state.cart.items).toEqual([]);
+    })
+});
+
 
 
 // Panier vide 
