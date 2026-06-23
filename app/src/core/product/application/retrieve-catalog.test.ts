@@ -1,5 +1,5 @@
-import type {Product} from "../domain/product";
-import {retrieveCatalog} from "./retrieve-catalog";
+import type { Product } from "../domain/product";
+import { retrieveCatalog } from "./retrieve-catalog";
 
 const product1: Product = {
     id: '1',
@@ -11,41 +11,29 @@ const product1: Product = {
     quantityMax: 10,
 };
 
+describe('retrieveCatalog', () => {
+  it('renvoie les produits reçus du port', async () => {
+    const okQuery = { execute: jest.fn().mockResolvedValue([product1]) };
+    // L'appel au use case. await indispensable car retrieveCatalog est async.
+    const result = await retrieveCatalog(okQuery);
 
-describe('Retrieve Catalog', () => {
+    // On valide le shape ENTIER : kind ET products.
+    expect(result).toEqual({ kind: 'success', products: [product1] });
+  });
 
+  it('transforme une panne technique en résultat métier failure', async () => {
+    // Faux port qui rejette. mockRejectedValue = "rejette avec cette erreur".
+    const failingQuery = { execute: jest.fn().mockRejectedValue(new Error('503')) };
 
-// Renvoi les produits reçu du port
-// pareil que la panne sauf que kind a un 'success' et on retourne products : [product1]
-    it('Récupère les produits du ports', async () => {
-
-        const query =  {execute: jest.fn().mockResolvedValue([product1]) };
-        const result = await retrieveCatalog(query);
-
-        expect(result).toEqual({kind: 'success', products: [product1]});
+    // Pattern asynchrone Jest :
+    //   await expect(promise).resolves.toEqual(...)
+    // C'est plus court qu'un await + expect classique.
+    await expect(retrieveCatalog(failingQuery)).resolves.toEqual({
+      kind: 'failure',
+      message: 'Impossible de charger le catalogue.',
     });
-
-
-
-// Transforme une panne technique en résultat métier failure (503) avec execute : jest.fn
-// expect avec await exemple : await expect(retrieveCatalog(fallingQuery).resolves.toEqual...)
-// kind message : avec la réponse noté en 'failure'
-// message : avec ton message d'erreur.
-
-
-//  fallingQuery = ... (new Error('503')) ...
-
-    it('récupère un message erreur lisible en cas de fail;', async () => {
-
-        const query =  {execute: jest.fn().mockRejectedValue(new Error('503')) };
-        const result = await retrieveCatalog(query);
-
-        expect(result).toEqual({kind: 'failure', message: "Error getting catalog"});
-    });
+  });
 });
-
-
-
 
 
 
