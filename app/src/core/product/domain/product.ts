@@ -4,3 +4,10 @@ export function formatPrice(price: number): string {
 
     return `${euros},${cents} €`;
 }
+
+export function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '');
+}

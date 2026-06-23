@@ -1,4 +1,4 @@
-import { formatPrice } from "./product";
+import { formatPrice, normalizeText } from "./product";
 
 describe('formatPrice', () => {
   it.each([
@@ -12,4 +12,19 @@ describe('formatPrice', () => {
   ])('should format %d as %s', (price, expected) => {
     expect(formatPrice(price)).toBe(expected);
   });
+});
+
+
+describe('normalizeText', () => {
+    it('passe en minuscules', () => {
+        expect(normalizeText('Pomme')).toBe('pomme');
+    });
+    
+    it('retire les accents pour comparer "Café" et "cafe"', () => {
+        expect(normalizeText('Café')).toBe(normalizeText('cafe'));
+    });
+
+    it('retire toutes les diacritiques courantes', () => {
+        expect(normalizeText('Crème brûlée à l’ancienne')).toBe('creme brulee a l’ancienne');
+    });
 });
