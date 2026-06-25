@@ -15,6 +15,23 @@ export function formatPrice(price: number): string {
     return `${euros},${cents} €`;
 }
 
+export type Category =
+  | 'fruits'
+  | 'legumes'
+  | 'cremerie'
+  | 'viande'
+  | 'boulangerie'
+  | 'boissons'
+  | 'surgeles'
+  | 'epicerie';
+
+
+export const CATEGORIES: Category[] = [
+  'fruits', 'legumes', 'cremerie', 'viande', 'boulangerie', 'boissons', 'surgeles', 'epicerie',
+];
+
+export type Unit = 'unite' | 'kg' | 'L';
+
 export function normalizeText(text: string): string {
   return text
     .toLowerCase()

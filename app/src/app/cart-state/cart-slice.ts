@@ -1,16 +1,20 @@
-// src/cart-slice.ts
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Product } from '../../core/product/domain/product';
 import {
   addItem as addItemDomain,
+  cartItemCount,
+  cartTotal,
   emptyCart,
+  removeItem as removeItemDomain,
+  updateQuantity as updateQuantityDomain,
   type Cart,
 } from '../../core/cart/domain/cart';
+import type { Product } from '../../core/product/domain/product';
 
 type CartState = { cart: Cart };
+
 const initialState: CartState = { cart: emptyCart() };
 
-const cartSlice = createSlice({
+const slice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
@@ -22,8 +26,25 @@ const cartSlice = createSlice({
       );
     },
 
+    removed: (state, action: PayloadAction<string>) => {
+      state.cart = removeItemDomain(state.cart, action.payload);
+    },
+
+    quantityUpdated: (state, action: PayloadAction<{ productId: string; quantity: number }>) => {
+      state.cart = updateQuantityDomain(state.cart, action.payload.productId, action.payload.quantity);
+    },
+
+    cleared: (state) => {
+      state.cart = emptyCart();
+    },
   },
 });
 
-export const { added } = cartSlice.actions;
-export const cartReducer = cartSlice.reducer;
+export const cartActions = slice.actions;
+export const cartReducer = slice.reducer;
+
+type RootStateWithCart = { cart: CartState };
+
+export const selectCartItems = (state: RootStateWithCart) => state.cart.cart.items;
+export const selectCartTotal = (state: RootStateWithCart) => cartTotal(state.cart.cart);
+export const selectCartItemCount = (state: RootStateWithCart) => cartItemCount(state.cart.cart);
